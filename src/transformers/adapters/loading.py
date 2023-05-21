@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from os import mkdir
 from os.path import exists, isdir, isfile, join
 from typing import Callable, Mapping, Sequence, Tuple
+from .modeling import GetSubnet
 
 import torch
 
@@ -59,7 +60,7 @@ class WeightsLoaderHelper:
             json.dump(config, f, indent=2, sort_keys=True)
         logger.info("Configuration saved in {}".format(output_config_file))
 
-    def save_weights(self, save_directory, filter_func):
+    def save_weights(self, save_directory, filter_func, sparsity=1.0, is_mask=False):
         if not exists(save_directory):
             mkdir(save_directory)
         else:
@@ -67,6 +68,9 @@ class WeightsLoaderHelper:
 
         # Get the state of all adapter modules for this task
         state_dict = self.state_dict(filter_func)
+        if is_mask and sparsity != 1.0:
+            for k, v in state_dict.items():
+                state_dict[k] = GetSubnet.apply(v.abs(), sparsity).bool()
         # Save the adapter weights
         output_file = join(save_directory, self.weights_name)
         torch.save(state_dict, output_file)
@@ -778,10 +782,11 @@ class MaskLoader(WeightsLoader):
     `model.heads` and a method `add_prediction_head(head_name, config)`.
     """
 
-    def __init__(self, model, error_on_missing=True, convert_to_flex_head=False):
+    def __init__(self, model, sparsity=1.0, error_on_missing=True, convert_to_flex_head=False):
         super().__init__(model, MASK_WEIGHTS_NAME, MASK_CONFIG_NAME)
         self.error_on_missing = error_on_missing
         self.convert_to_flex_head = convert_to_flex_head
+        self.sparsity = sparsity
 
     def filter_func(self, adapter_name):
         return lambda x: ".adapters_mask.{}.".format(adapter_name) in x
@@ -805,7 +810,7 @@ class MaskLoader(WeightsLoader):
 
         # Save head weights
         filter_func = self.filter_func(name)
-        self.weights_helper.save_weights(save_directory, filter_func)
+        self.weights_helper.save_weights(save_directory, filter_func, sparsity=self.sparsity, is_mask=True)
 
 
     def load(self, save_directory, load_as=None, loading_info=None, **kwargs):

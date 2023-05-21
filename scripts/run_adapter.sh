@@ -16,31 +16,33 @@ metrics['rte']=accuracy
 metrics['qnli']=accuracy
 metrics['mnli']=accuracy
 
+declare -A t2epoch
+t2epoch['cola']=20
+t2epoch['sst2']=10
+t2epoch['mrpc']=20
+t2epoch['qqp']=10
+t2epoch['stsb']=20
+t2epoch['rte']=20
+t2epoch['qnli']=10
+t2epoch['mnli']=10
+
+
 sparsity=0.5
-mask_lr=1e-3
+mask_lr=3e-3
 
 extra_cmd_for_prefix=""
 
 # small 'rte' 'mrpc' 'stsb' 'cola'
 # large 'sst2' 'qqp' 'qnli' 'mnli'
 
-# lora
-# adapter_config=lora
-lora_r=32
-
 # adapter
-# adapter_config=pfeiffer
+adapter_config=pfeiffer
 adapter_reduction_factor=12
 
-# prefix
-adapter_config=prefix_tuning
-prefix_length=64
 
-
-for TASK_NAME in 'sst2' 'qqp' 'qnli' 'rte' 'mrpc' 'stsb' 'cola' 'mnli'
+for TASK_NAME in 'rte' 'mrpc' 'stsb' 'cola' 'sst2' 'qqp' 'qnli' 'mnli'
 do
-  export WANDB_PROJECT=Finetune.${TASK_NAME}
-  # export WANDB_PROJECT=test
+  export WANDB_PROJECT=ProPETadapter.${TASK_NAME}
 
   metric=${metrics[${TASK_NAME}]}
 
@@ -51,21 +53,18 @@ do
   for seed in 42 43 44
   do
     # share
-    # exp_name=share_and_mask.sd_${seed}.arf_${adapter_reduction_factor}.spsty_${sparsity}
-    # exp_name=share_and_mask.sd_${seed}.prefix_length_${prefix_length}.spsty_${sparsity}.mask_lr_${mask_lr}
-    # extra_cmd="--share_adapter"
+    exp_name=share_and_mask.sd_${seed}.arf_${adapter_reduction_factor}.spsty_${sparsity}.mask_lr_${mask_lr}.specifc_epoch
+    extra_cmd="--share_adapter"
 
     # not share
-    exp_name=Finetune.sd_${seed}.epoch_10
-    # exp_name=original.sd_${seed}.arf_${adapter_reduction_factor}
+    # exp_name=original.sd_${seed}.arf_${adapter_reduction_factor}.specifc_epoch
 
-    SAVE=/root/autodl-tmp/checkpoints/${TASK_NAME}/Finetune/${exp_name}/
-
-    SAVE_FILE=/root/autodl-tmp/checkpoints/${TASK_NAME}/Finetune/${exp_name}/test_results.json
+    SAVE=checkpoints/${TASK_NAME}/test/${exp_name}/
+    SAVE_FILE=checkpoints/${TASK_NAME}/test/${exp_name}/test_results.json
 
     rm -rf ${SAVE}; mkdir -p ${SAVE}
 
-    # --load_adapter checkpoints/cola/20221220/spsty_0.5.sd_44.arf_12/checkpoint-268/cola/ \
+
     until [ -e ${SAVE_FILE} ]
     do
       python examples/pytorch/text-classification/run_glue.py \
@@ -79,10 +78,11 @@ do
         --per_device_train_batch_size 128 \
         --learning_rate 1e-4 \
         --mask_learning_rate ${mask_lr} \
-        --num_train_epochs 10 \
+        --num_train_epochs ${t2epoch[${TASK_NAME}]} \
         --prefix_length ${prefix_length} \
         --lora_r ${lora_r} \
         --overwrite_output_dir \
+        --train_adapter \
         --warmup_ratio 0.1 \
         --save_total_limit=2 \
         --adapter_config ${adapter_config} \
@@ -95,7 +95,8 @@ do
         --run_name ${TASK_NAME}.${exp_name} \
         --output_dir ${SAVE} \
         --seed ${seed} \
-        --adapter_reduction_factor ${adapter_reduction_factor} ${extra_cmd}
+        --adapter_reduction_factor ${adapter_reduction_factor} ${extra_cmd} \
+
     done
   done
 done

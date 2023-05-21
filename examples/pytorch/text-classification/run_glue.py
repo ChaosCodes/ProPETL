@@ -375,6 +375,7 @@ def main():
     )
         
     config.share_adapter = model_args.share_adapter
+    config.sparsity=model_args.sparsity
 
     tokenizer = AutoTokenizer.from_pretrained(
         model_args.tokenizer_name if model_args.tokenizer_name else model_args.model_name_or_path,
@@ -469,7 +470,8 @@ def main():
             raise ValueError(
                 "Adapters can only be loaded in adapters training mode.Use --train_adapter to enable adapter training"
             )
-    # import pdb; pdb.set_trace()
+    
+    for n, p in model.named_parameters(): print(n, p.requires_grad)
 
     # lora param
     # adapter = sum(param.numel() for n, param in model.named_parameters() if '.value.loras.' in n or '.query.loras.' in n)

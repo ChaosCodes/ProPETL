@@ -1128,7 +1128,7 @@ class ModelWithHeadsAdaptersMixin(ModelAdaptersMixin):
             custom_weights_loaders.append(PredictionHeadLoader(self, error_on_missing=False))
 
         if self.config.share_adapter:
-            custom_weights_loaders.append(MaskLoader(self, error_on_missing=False))
+            custom_weights_loaders.append(MaskLoader(self, sparsity=self.config.sparsity, error_on_missing=False))
 
         super().save_adapter(
             save_directory,
@@ -1165,6 +1165,7 @@ class ModelWithHeadsAdaptersMixin(ModelAdaptersMixin):
 
         if self.config.share_adapter:
             custom_weights_loaders.append(MaskLoader(self, 
+                                                     sparsity=self.config.sparsity,
                                                      error_on_missing=False,
                                                      convert_to_flex_head=self._convert_to_flex_head,
                                             )
