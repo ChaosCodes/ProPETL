@@ -1,7 +1,7 @@
 # One Network, Many Masks: Towards More Parameter-Efficient Transfer Learning
 This repository is for our ACL' 23 paper:
 One Network, Many Masks: Towards More Parameter-Efficient Transfer Learning
-
+The code is based on [adapterhub](https://github.com/adapter-hub/adapter-transformers).
 
 # Environments
 
