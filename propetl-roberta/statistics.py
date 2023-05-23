@@ -13,7 +13,7 @@ task_metric = {
 }
 
 lora_alpha=32
-sparsity=1.0
+sparsity=0.5
 adapter_reduction_factor=12
 
 
@@ -25,27 +25,11 @@ for TASK_NAME in ['cola', 'sst2', 'mrpc', 'qqp', 'stsb', 'mnli', 'qnli', 'rte']:
 # for TASK_NAME in ['sst2']:
     acc = []
     second_acc = []
-    for seed in [44]:
-        # cola.original.sd_44.arf_12.specifc_epoch
-        # directory_name = f'proadapter/original.sd_{seed}.arf_{adapter_reduction_factor}.specifc_epoch'
-        # directory_name = f'proadapter/share_and_mask.sd_{seed}.arf_{adapter_reduction_factor}.spsty_{sparsity}.mask_lr_3e-3.specifc_epoch'
-        # directory_name = f'proadapter/share_and_mask.sd_{seed}.arf_{adapter_reduction_factor}.spsty_{sparsity}'
-        # directory_name = f'proprefix/original.sd_{seed}.prefix_length_64.specifc_epoch'
-        # directory_name = f'proprefix/share_and_mask.sd_{seed}.prefix_length_64.spsty_{sparsity}.mask_lr_1e-4.specifc_epoch'
-        # cola.original.sd_44.lora_r_32.lora_alpha_32.specifc_epoch
-        # directory_name = f'prolora/original.sd_{seed}.lora_r_32.lora_alpha_{lora_alpha}.specifc_epoch'
-        # directory_name = f'adapter/share_and_mask.sd_{seed}.arf_{adapter_reduction_factor}'
+    for seed in [42, 43, 44]:
+        # directory_name = f'adapter/original.sd_{seed}.arf_{adapter_reduction_factor}.spsty_{sparsity}.mask_lr_3e-3.specifc_epoch'
+        directory_name = f'adapter/share_and_mask.sd_{seed}.arf_{adapter_reduction_factor}.spsty_{sparsity}.mask_lr_3e-3.specifc_epoch'
 
-
-        # directory_name = f'prolora/share_and_mask.sd_{seed}.lora_r_32.lora_alpha_48.spsty_1.0.mask_lr_3e-2.specifc_epoch'
-        if TASK_NAME in ['cola', 'mrpc', 'stsb', 'rte']:
-            directory_name = f'Finetune/Finetune.sd_{seed}'
-        #     directory_name = f'proadapter/share_and_mask.sd_{seed}.arf_{adapter_reduction_factor}.spsty_{sparsity}'
-        else:
-            directory_name = f'Finetune/Finetune.sd_{seed}.epoch_10'
-        #     directory_name = f'proadapter/share_and_mask.sd_{seed}.arf_{adapter_reduction_factor}.spsty_{sparsity}.mask_lr_3e-3.epoch_10'
-
-        test_results = f'/root/autodl-tmp/checkpoints/{TASK_NAME}/{directory_name}/test_results.json'
+        test_results = f'checkpoints/{TASK_NAME}/{directory_name}/test_results.json'
         with open(test_results, 'r') as j:
             res = json.loads(j.read())
         if TASK_NAME in ['mrpc','qqp', 'stsb']:

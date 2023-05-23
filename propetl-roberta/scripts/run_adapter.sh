@@ -59,8 +59,8 @@ do
     # not share
     # exp_name=original.sd_${seed}.arf_${adapter_reduction_factor}.specifc_epoch
 
-    SAVE=checkpoints/${TASK_NAME}/test/${exp_name}/
-    SAVE_FILE=checkpoints/${TASK_NAME}/test/${exp_name}/test_results.json
+    SAVE=checkpoints/${TASK_NAME}/adapter/${exp_name}/
+    SAVE_FILE=checkpoints/${TASK_NAME}/adapter/${exp_name}/test_results.json
 
     rm -rf ${SAVE}; mkdir -p ${SAVE}
 
