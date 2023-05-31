@@ -40,7 +40,7 @@ For more infirmation, please refer to the README file in the propelt-roberta dir
 Navigate to the propelt-t5 directory, install the requirements, and then run the model using the provided scripts. For example, below script is prepared to reproduce the experiments mentioned in Table 2 and Figure 3 of our paper. 
 
 ```bash
-cd ProPETL-T5_directory
+cd propelt-t5
 pip install -r requirements.txt
 CUDA_VISIBLE_DEVICES=0 python3 finetune_t5_trainer.py configs/glue/propetl_adapter_reduction12.json 42  # replace with desired config and random seed
 ```
