@@ -24,7 +24,7 @@ Ensure that you have a suitable environment to run our code. We primarily use Py
 ## Reproducing the Experiments
 
 ### Encoder-Only (RoBERTa) Experiments
-Navigate to the RoBERTa directory, install the requirements, and then run the model using the provided scripts. These scripts are prepared to reproduce the experiments mentioned in Table 1 of our paper.
+Navigate to the propelt-roberta  directory, install the requirements, and then run the model using the provided scripts. These scripts are prepared to reproduce the experiments mentioned in Table 1 of our paper.
 
 ```bash
 cd roberta_directory
@@ -34,8 +34,10 @@ bash scripts/run_adapter.sh  # for ProAdapter
 bash scripts/run_lora.sh  # for ProLoRA
 bash scripts/run_prefix.sh  # for ProPrefix
 ```
+For more infirmation, please refer to the README file in the propelt-roberta directory.
+
 ### Encoder-Decoder (T5) Experiments
-Navigate to the ProPETL-T5 directory, install the requirements, and then run the model using the provided scripts. For example, the script are prepared to reproduce the experiments mentioned in Table 2 and Figure 3 of our paper. 
+Navigate to the propelt-t5 directory, install the requirements, and then run the model using the provided scripts. For example, the script are prepared to reproduce the experiments mentioned in Table 2 and Figure 3 of our paper. 
 
 ```bash
 cd ProPETL-T5_directory
@@ -43,7 +45,7 @@ pip install -r requirements.txt
 CUDA_VISIBLE_DEVICES=0 python3 finetune_t5_trainer.py configs/glue/propetl_adapter_reduction12.json 42  # replace with desired config and random seed
 ```
 
-For other configs, please refer to the README file in the ProPETL-T5 directory.
+For other configs, please refer to the README file in the propelt-t5 directory.
 
 
 # Reference
