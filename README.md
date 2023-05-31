@@ -37,7 +37,7 @@ bash scripts/run_prefix.sh  # for ProPrefix
 For more infirmation, please refer to the README file in the propelt-roberta directory.
 
 ### Encoder-Decoder (T5) Experiments
-Navigate to the propelt-t5 directory, install the requirements, and then run the model using the provided scripts. For example, the script are prepared to reproduce the experiments mentioned in Table 2 and Figure 3 of our paper. 
+Navigate to the propelt-t5 directory, install the requirements, and then run the model using the provided scripts. For example, below script is prepared to reproduce the experiments mentioned in Table 2 and Figure 3 of our paper. 
 
 ```bash
 cd ProPETL-T5_directory
