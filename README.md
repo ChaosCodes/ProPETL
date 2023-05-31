@@ -45,12 +45,6 @@ CUDA_VISIBLE_DEVICES=0 python3 finetune_t5_trainer.py configs/glue/propetl_adapt
 
 
 
-# Questions & Feedback
-
-We encourage any questions or feedback related to our work. Please feel free to open an issue on this GitHub repository if you have any queries or suggestions. Your participation will help us improve and advance this project further.
-
-Please remember to refer to each individual part's readme for more detailed instructions on how to run the experiments. Happy coding!
-
 
 # Reference
 If you find this repository useful, please cite our paper:
