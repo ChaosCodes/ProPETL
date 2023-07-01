@@ -9,7 +9,7 @@ Fine-tuning pre-trained language models for multiple tasks tends to be expensive
 
 
 
-# How to reimplement our work
+# How to reproduce our work
 
 In our work, we have conducted experiments on both encoder-only models (RoBERTa) and encoder-decoder models (T5).
 
